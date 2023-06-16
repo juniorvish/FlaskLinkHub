@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-bold mb-4">{{ post.title }}</h1>
+    <div class="mb-4">
+        <a href="{{ post.url }}" class="text-blue-500" target="_blank">{{ post.url }}</a>
+    </div>
+    <div class="mb-8">
+        <p>Posted by {{ post.user.username }} in <a href="{{ url_for('subreddit', subreddit_id=post.subreddit_id) }}" class="text-blue-500">{{ post.subreddit.name }}</a></p>
+    </div>
+
+    <h2 class="text-xl font-bold mb-4">Comments</h2>
+    {% for comment in post.comments %}
+    <div class="mb-4">
+        <p>{{ comment.content }}</p>
+        <p class="text-sm text-gray-500">- {{ comment.user.username }}</p>
+    </div>
+    {% endfor %}
+
+    <form id="comment-form" action="{{ url_for('create_comment', post_id=post.id) }}" method="POST">
+        {{ form.csrf_token }}
+        <div class="mb-4">
+            <label for="{{ form.content.id }}" class="block text-sm font-bold mb-2">Add a comment:</label>
+            {{ form.content(class="w-full px-3 py-2 border rounded", placeholder="Your comment") }}
+            {% if comment_error %}
+            <p class="text-red-500 text-xs mt-2">{{ comment_error }}</p>
+            {% endif %}
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
+    </form>
+</div>
+{% endblock %}
