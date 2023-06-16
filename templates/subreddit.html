@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4">
+    <h1 class="text-3xl font-bold mb-4">{{ subreddit.name }}</h1>
+    <p class="mb-4">{{ subreddit.description }}</p>
+
+    <form id="post-form" action="{{ url_for('create_post') }}" method="POST">
+        {{ form.csrf_token }}
+        <input type="hidden" name="subreddit_id" value="{{ subreddit.id }}">
+        <div class="mb-4">
+            <label for="{{ form.title.id }}" class="block text-sm font-medium text-gray-700">Title</label>
+            <input id="{{ form.title.id }}" name="{{ form.title.name }}" type="text" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.url.id }}" class="block text-sm font-medium text-gray-700">URL</label>
+            <input id="{{ form.url.id }}" name="{{ form.url.name }}" type="text" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+        </div>
+        <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md">Submit</button>
+    </form>
+
+    <div class="mt-8">
+        {% for post in posts %}
+        <div class="mb-4">
+            <h2 class="text-xl font-bold"><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></h2>
+            <p class="text-sm text-gray-500">Posted by {{ post.user.username }}</p>
+            <a href="{{ url_for('post', post_id=post.id) }}" class="text-indigo-600">View comments</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
